@@ -14,5 +14,33 @@ CHIP Mux {
     OUT out;
 
     PARTS:
-    // Put your code here:
+    // Canonical representation
+    // for ease of implementation
+    // _      __     _
+    // abs + abs + abs + abs
+    //
+    
+    Not(in=a, out=aNot);
+    Not(in=b, out=bNot);
+    Not(in=sel, out=sNot);
+    
+    //First term
+    And(a=aNot, b=b, out=aNotAndb);
+    And(a=aNotAndb, b=sel, out=aNotAndbAnds);
+    
+    //Second term
+    And(a=a, b=bNot, out=aAndbNot);
+    And(a=aAndbNot, b=sNot, out=aAndbNotAndsNot);
+    
+    //Third term
+    And(a=a, b=b, out=aAndb);
+    And(a=aAndb, b=sNot, out=aAndbAndsNot);
+    
+    //Fourth term
+    And(a=aAndb, b=sel, out=aAndbAnds);
+    
+    //Oring together all the terms
+    Or(a=aNotAndbAnds, b=aAndbNotAndsNot, out=aNotAndbAndsOraAndbNotAndsNot);
+    Or(a=aAndbAndsNot, b=aAndbAnds, out=aAndbAndsNotOraAndbAnds);
+    Or(a=aNotAndbAndsOraAndbNotAndsNot, b=aAndbAndsNotOraAndbAnds, out=out);
 }
